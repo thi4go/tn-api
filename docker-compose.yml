@@ -1,0 +1,34 @@
+version: "1"
+services:
+  app:
+    container_name: tn-api
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=my-secret-pw
+      - DATABASE_NAME=truenorth
+    depends_on:
+      - db
+
+  db:
+    container_name: tn-api-db
+    image: mysql:5.7
+    platform: linux/x86_64
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: truenorth
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
+
+volumes:
+  db-data:
