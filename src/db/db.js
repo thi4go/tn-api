@@ -11,30 +11,28 @@ import {
   DATABASE_USER,
 } from '../config.js';
 
-function setupInitialConnection() {
-  return new Sequelize('', DATABASE_USER, DATABASE_PASSWORD, {
+async function setupDatabaseConnection() {
+  const sequelize = new Sequelize('', DATABASE_USER, DATABASE_PASSWORD, {
     host: DATABASE_HOST,
     port: 3306,
     dialect: 'mysql',
     logging: false,
+    retry: {
+      max: 10,
+      match: [
+        Sequelize.ConnectionError,
+        Sequelize.ConnectionRefusedError,
+        Sequelize.ConnectionTimedOutError,
+      ],
+    },
   });
-}
-
-async function setupDatabaseConnection(sequelize) {
   await sequelize.query(`CREATE DATABASE IF NOT EXISTS ${DATABASE_NAME};`);
-  await sequelize.close();
-
-  return new Sequelize(DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, {
-    host: DATABASE_HOST,
-    port: 3306,
-    dialect: 'mysql',
-    logging: false,
-  });
+  await sequelize.query(`USE ${DATABASE_NAME};`);
+  return sequelize;
 }
 
 export async function initDatabase() {
   return await pipeAsync(
-    setupInitialConnection,
     setupDatabaseConnection,
     defineUserModel,
     defineOperationModel,
