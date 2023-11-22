@@ -24,7 +24,6 @@ async function getUserByUsername(context) {
   const { username, db } = context;
   const user = await db.models.User.findOne({ where: { username: username } });
   if (!user) {
-    console.log('here');
     throw new Error('Invalid credentials');
   }
   return { ...context, user };
