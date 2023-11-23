@@ -19,11 +19,8 @@ async function createDatabaseIfNotExists() {
     logging: false,
     retry: {
       max: 10,
-      match: [
-        Sequelize.ConnectionError,
-        Sequelize.ConnectionRefusedError,
-        Sequelize.ConnectionTimedOutError,
-      ],
+      match: ['ECONNREFUSED', /ECONNREFUSED/],
+      backoffBase: 3000,
     },
   });
 
@@ -39,11 +36,7 @@ async function setupDatabaseConnection() {
     logging: false,
     retry: {
       max: 10,
-      match: [
-        Sequelize.ConnectionError,
-        Sequelize.ConnectionRefusedError,
-        Sequelize.ConnectionTimedOutError,
-      ],
+      match: ['ECONNREFUSED', /ECONNREFUSED/],
       backoffBase: 3000,
     },
   });

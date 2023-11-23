@@ -30,7 +30,7 @@ export async function defineUserModel(sequelize) {
       balance: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 100,
       },
     },
     {

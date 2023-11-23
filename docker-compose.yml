@@ -1,24 +1,5 @@
-version: '1'
+version: '2.3'
 services:
-  db:
-    container_name: tn-api-db
-    image: mysql:5.7
-    healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    platform: linux/x86_64
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: my-secret-pw
-      MYSQL_DATABASE: truenorth_dev
-    ports:
-      - '3306:3306'
-    volumes:
-      - db-data:/var/lib/mysql
-      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
-
   app:
     container_name: tn-api
     restart: always
@@ -31,7 +12,26 @@ services:
       - DATABASE_PASSWORD=my-secret-pw
       - DATABASE_NAME=truenorth_dev
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: tn-api-db
+    image: mysql:5.7
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 2s
+      timeout: 5s
+      retries: 100
+    platform: linux/x86_64
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: truenorth_dev
+    ports:
+      - '3306:3306'
+    volumes:
+      - db-data:/var/lib/mysql
+      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
 
 volumes:
   db-data:
