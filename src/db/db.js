@@ -44,6 +44,7 @@ async function setupDatabaseConnection() {
         Sequelize.ConnectionRefusedError,
         Sequelize.ConnectionTimedOutError,
       ],
+      backoffBase: 3000,
     },
   });
 }
