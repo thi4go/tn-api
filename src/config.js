@@ -1,6 +1,6 @@
 import { defaultTo } from 'ramda';
 
-export const PORT = defaultTo(3000, process.env.PORT);
+export const PORT = defaultTo(8080, process.env.PORT);
 
 export const JWT_SECRET = defaultTo('temp_secret_key', process.env.JWT_SECRET);
 
