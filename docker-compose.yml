@@ -1,19 +1,5 @@
 version: '1'
 services:
-  app:
-    container_name: tn-api
-    restart: always
-    build: .
-    ports:
-      - '3000:3000'
-    environment:
-      - DATABASE_HOST=db
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=my-secret-pw
-      - DATABASE_NAME=truenorth_dev
-    depends_on:
-      - db
-
   db:
     container_name: tn-api-db
     image: mysql:5.7
@@ -32,6 +18,20 @@ services:
     volumes:
       - db-data:/var/lib/mysql
       - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
+
+  app:
+    container_name: tn-api
+    restart: always
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=my-secret-pw
+      - DATABASE_NAME=truenorth_dev
+    depends_on:
+      - db
 
 volumes:
   db-data:
