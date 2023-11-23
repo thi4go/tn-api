@@ -17,6 +17,11 @@ services:
   db:
     container_name: tn-api-db
     image: mysql:5.7
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     platform: linux/x86_64
     restart: always
     environment:
